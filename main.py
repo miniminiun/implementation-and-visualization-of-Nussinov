@@ -68,6 +68,8 @@ def main():
     path = [[0 for i in range(len(line))] for j in range(len(line))]
     paren = ['-' for i in range(len(line))]
 
+
+    #path == -3 means diagnal and add 1, -4 means diagnal without add 1, -1 means down, -2 means left
     for i in range(len(line)):
         for j in range(len(line) - 1, -1, -1):
             maxvalue = 0;
@@ -84,42 +86,48 @@ def main():
                 maxleft = dp[j][i - 1]
                 maxdown = dp[j + 1][i]
                 """dp[j][i] = max(maxk,max(maxdia,max(maxleft,maxdown)))"""
-                if maxdown > maxleft:
-                    if maxdown > maxdia:
-                        if maxdown > maxk:
+                if maxdown > maxk:
+                    if maxdown > maxleft:
+                        if maxdown > maxdia:
                             path[j][i] = -1
                             dp[j][i] = maxdown
                         else:
-                            path[j][i] = k
-                            dp[j][i] = maxk
-                    else:
-                        if maxdia > maxk:
                             if maxdia == dp[j + 1][i - 1] + 1:
                                 path[j][i] = -3
                             else:
                                 path[j][i] = -4
                             dp[j][i] = maxdia
-                        else:
-                            path[j][i] = k
-                            dp[j][i] = maxk
-                else:
-                    if maxleft > maxdia:
-                        if maxleft > maxk:
+                    else:
+                        if maxleft > maxdia:
                             path[j][i] = -2
                             dp[j][i] = maxleft
                         else:
-                            path[j][i] = k
-                            dp[j][i] = maxk
-                    else:
-                        if maxdia > maxk:
                             if maxdia == dp[j + 1][i - 1] + 1:
                                 path[j][i] = -3
                             else:
                                 path[j][i] = -4
                             dp[j][i] = maxdia
-                        else:
+                else:
+                    if maxk > maxleft:
+                        if maxk > maxdia:
                             path[j][i] = k
                             dp[j][i] = maxk
+                        else:
+                            if maxdia == dp[j + 1][i - 1] + 1:
+                                path[j][i] = -3
+                            else:
+                                path[j][i] = -4
+                            dp[j][i] = maxdia
+                    else:
+                        if maxleft > maxdia:
+                            path[j][i] = -2
+                            dp[j][i] = maxleft
+                        else:
+                            if maxdia == dp[j + 1][i - 1] + 1:
+                                path[j][i] = -3
+                            else:
+                                path[j][i] = -4
+                            dp[j][i] = maxdia
 
     for i in range(len(line)):
         print(i, " ", end='')
@@ -152,15 +160,10 @@ def main():
 
     fig = plt.figure(figsize=(16, 6))
     ax = fig.add_subplot(111, frameon=True, xticks=[], yticks=[])
-    ax2 = fig.add_subplot(111, frameon=True, xticks=[], yticks=[])
+    #ax2 = fig.add_subplot(111, frameon=True, xticks=[], yticks=[])
 
-    table1 = plt.table(
-        cellText=[paren],
-        colLabels=col,
-        cellLoc='center'
-    )
     the_table = plt.table(
-        cellText=dp2,
+        cellText=dp,
         rowLabels=col,
         rowLoc='center',
         colLabels=col,
@@ -168,6 +171,12 @@ def main():
         cellColours=bicolormap(dp2),
         cellLoc='center',
         loc='center'
+    )
+
+    table1 = plt.table(
+        cellText=[paren],
+        colLabels=col,
+        cellLoc='center'
     )
     """print(bicolormap(dp2))"""
 
